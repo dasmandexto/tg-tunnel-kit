@@ -1,0 +1,18 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# Скрипт сервиса для termux-services.
+# Кладётся в $PREFIX/var/service/autossh/run, права: chmod +x run
+# Включается командой: sv-enable autossh
+#
+# ЗАМЕНИТЕ 2222 на свой TUNNEL_PORT, если он у вас другой.
+
+# Termux особенный: autossh считает быстрый старт ошибкой, если GATETIME не 0.
+# С нулём он не сдаётся и переподключается бесконечно.
+export AUTOSSH_GATETIME=0
+
+# Как часто (сек) проверять соединение.
+export AUTOSSH_POLL=30
+
+# -M 0            : без отдельного порта мониторинга, опираемся на keep-alive ssh
+# -N              : не открывать интерактивную сессию, только проброс
+# -R 2222:...:8022: открыть порт 2222 на VPS, ведущий к 8022 на телефоне
+exec autossh -M 0 -N vps-tunnel -R 2222:localhost:8022

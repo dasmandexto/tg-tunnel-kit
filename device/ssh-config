@@ -1,0 +1,22 @@
+# ~/.ssh/config на телефоне
+# Кладётся в Termux по пути ~/.ssh/config, права: chmod 600 ~/.ssh/config
+#
+# Назначение: ярлык vps-tunnel, чтобы autossh вызывался коротко:
+#   autossh -M 0 -N vps-tunnel -R 2222:localhost:8022
+#
+# Замените плейсхолдеры на свои значения.
+
+Host vps-tunnel
+    HostName your-vps.domain        # домен или IP вашего VPS
+    User tunnel                     # служебная учётка туннеля на VPS
+    Port 22                         # SSH-порт самого VPS
+    IdentityFile ~/.ssh/id_ed25519  # ключ телефона
+
+    # Раз в 30 с проверяем, что соединение живо.
+    # Без этого NAT/оператор молча рвут «тихое» соединение.
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+
+    # Если проброс порта не удался — выйти с ошибкой,
+    # а не висеть «живым» без туннеля.
+    ExitOnForwardFailure yes
